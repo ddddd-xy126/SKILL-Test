@@ -2,8 +2,7 @@
   <Layout :header="true" :footer="true" :main="true" :scene="true">
     <template v-slot:header>
       <div class="content-header">
-        <Header></Header>
-        <button class="camera" @click="getCaerma">相机位置</button>
+        <Header></Header> 
       </div>
     </template>
 
