@@ -24,10 +24,10 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 ### 1. 多模态输入解析
 
 - **UI 设计图识别**：
-
-  - 自动识别区域：Header (顶部)、Footer (底部)、Left/Right Sidebar (左右侧边栏)、Tools (工具栏)。
+  - **自动识别区域**：Header (顶部)、Footer (底部)、Left/Right Sidebar (左右侧边栏)、Tools (工具栏)。
   - **比例计算**：分析侧边栏内卡片（Box）的高度占比（如 30:70 或 33:33:33）。
   - **组件识别**：识别导航栏、天气、搜索框、工具栏按钮等元素位置。
+  - **微观细节提取 (Micro-Detail Extraction)**：**必须** 检查 Header 和 Footer 中的文本格式（如日期格式 "YYYY/MM/DD HH:mm:ss"）、小图标（如天气 Icon）、用户信息等。**严禁** 忽略顶部状态栏的微小元素。
 
 - **自然语言理解**：
   - 意图识别：移动（Move）、新增（Add）、删除（Remove）、调整比例（Resize）。
@@ -63,30 +63,28 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 ### Step 1：全量定位与深度解析 (Targeting & Deep Analysis)
 
 1.  **多维度输入解析**：
-
     - **UI 图深度解析 (UI Analysis)**：
       - **布局识别**：精准识别设计稿中的 Header, Footer, Sidebar, Tools 位置。
       - **比例分析**：计算侧边栏内卡片 (Box) 的高度占比，识别组件间隙。
-      - **元素提取**：识别 Logo、导航项、天气时间、设置按钮、工具栏图标等核心元素。
+      - **微观元素提取**：**必须** 放大检查 Header 左右两侧的细节（日期时间格式、天气图标、Logo 文本内容），记录下具体的格式（如 `YYYY/MM/DD` vs `YYYY-MM-DD`）。
     - **自然语言解析 (Prompt Analysis)**：
       - **显式需求提取**：识别用户明确要求开启或移动的组件。
       - **隐式清理规则**：基于“极简删除原则”，识别用户未提及的所有布局元素。
     - **双向核对 (Cross-Check)**：将 UI 图识别结果与用户描述比对，若有冲突，以用户描述为准，但需在解析报告中指出。
 
 2.  **全量现状扫描**：
-
     - 定位 `src/views/index.vue` (全局控制层) 和所有子视图 `src/views/page_X/page_X_1/index.vue` (局部控制层)。
     - 列出当前所有页面的 `<Layout>` Props 和 Slots 现状。
 
 3.  **制定变更清单**：
     - **全局变更 (Global)**：Header/Footer 的内容、显隐及全局导航逻辑。
     - **局部变更 (Local)**：侧边栏卡片内容、Tools 显隐、布局比例。
+    - **组件化重构 (Componentization)**：对于复杂的侧边栏内容，**必须** 规划创建独立的 Vue 子组件（如 `ClimateProfile.vue`, `WeatherChart.vue`），严禁在 `index.vue` 中堆砌大量 HTML 代码。
     - **清理清单 (Cleanup)**：UI 图和描述中均未提及的插槽。
 
 ### Step 2：Props 责任分配与标准化 (Responsibility & Props Standard)
 
 1.  **分层控制原则 (Tiered Control)**：
-
     - **全局层 (`src/views/index.vue`)**：
       - 负责控制 `header`, `footer`, `scene`, `main` 的全局显隐。
       - **必须显式设置**：`:header="true"`, `:footer="true"` (或根据需求设置)。
@@ -100,7 +98,12 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 ### Step 3：实施修改 (Implementation)
 
-#### A. 布局结构调整 (Layout Props & Slots)
+#### A. 组件化开发 (Component Development)
+
+- **优先创建子组件**：针对 UI 图中的每个独立卡片，创建专门的 `.vue` 组件。
+- **样式内聚**：使用 Scoped CSS 确保样式不污染全局，利用 Flexbox/Grid 实现组件内部的精细布局（如四季天气的 4 个 Badge）。
+
+#### B. 布局结构调整 (Layout Props & Slots)
 
 - **全量同步修改**：**必须** 依次修改所有扫描到的视图文件。
 - **显式 Props 设置**：
@@ -120,11 +123,10 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 - **插槽清理**：物理删除或注释掉清理清单中的所有插槽代码。
 - **高度控制原则**：Agent **必须** 通过 CSS 类名在 `<style>` 标签中设置高度百分比，严禁直接在 `Box` 组件上使用 `:height` 属性。
 
-#### B. 导航位置迁移 (Navigation Migration)
+#### C. 导航位置迁移与细节修正
 
-- 在目标插槽插入新导航并绑定数据。
-- **注释旧代码**：必须查找旧位置的导航代码并将其注释掉。
-- **样式保障**：新导航组件必须设置 `z-index` (建议 10+) 和显式高度/宽高比，防止被背景遮挡或塌陷。
+- **细节对齐**：根据 Step 1 提取的微观细节，修改 `src/layout/header.vue` 或创建新的 Status 组件，确保日期格式、图标位置与 UI 图 **完全一致**。
+- **导航迁移**：在目标插槽插入新导航并绑定数据，注释掉旧代码。
 
 ### Step 4：样式修正 (Style Correction)
 
@@ -146,12 +148,14 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 3.  **高度与布局核对 (Height & Layout)**：
     - [ ] **严禁溢出**：侧边栏容器和根布局是否设置了 `overflow: hidden`？
     - [ ] **高度分配验证**：侧边栏内部所有 `Box` 的高度与间距之和是否 **≤ 100%**？
-4.  **导航核对**：
-    - [ ] 是否存在两套导航？（必须注释掉旧导航）
+4.  **微观细节核对 (Micro-Details)**：
+    - [ ] **Header 细节**：日期格式、时间显示、天气图标是否与 UI 图一致？
+    - [ ] **组件完整性**：是否遗漏了任何小图标或状态文字？
 
 ## 关键原则 (Critical Rules)
 
 1.  **未提及即清理**：这是本 Skill 的核心，用户没说的可选功能全部干掉。
 2.  **显式 Props 准则**：不留任何模糊地带，所有开关必须明示。
 3.  **多页面同步**：布局修改是全局性的，严禁只改一个页面。
-4.  **Scene 完整性**：除非明确要求，否则严禁修改 `scene` 插槽。
+4.  **组件化优先**：拒绝面条代码，每个卡片都是独立的组件。
+5.  **见微知著**：Header/Footer 的任何文字和图标细节都不能放过。
