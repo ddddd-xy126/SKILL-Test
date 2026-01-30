@@ -30,6 +30,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
   - **比例计算**：分析侧边栏内卡片（Box）的高度占比（如 30:70 或 33:33:33）。
   - **组件识别**：识别导航栏、天气、搜索框、工具栏按钮等元素位置。
   - **微观细节提取 (Micro-Detail Extraction)**：**必须** 检查 Header 和 Footer 中的文本格式（如日期格式 "YYYY/MM/DD HH:mm:ss"）、小图标（如天气 Icon）、用户信息等。**严禁** 忽略顶部状态栏的微小元素。
+  - **视觉一致性 (Visual Consistency)**：Header 标题 Logo 默认字体大小应设置为 `var(--font-size-64)` 以保证视觉冲击力，除非用户另有要求。
 
 - **自然语言理解**：
   - 意图识别：移动（Move）、新增（Add）、删除（Remove）、调整比例（Resize）。
