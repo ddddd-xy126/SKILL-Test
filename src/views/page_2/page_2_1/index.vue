@@ -63,7 +63,7 @@
 </style>
 
 <template>
-  <Layout :aside="true" :headerTool="true" :footerTool="true">
+  <Layout :aside="true" :headerTool="true" :footerTool="true" leftTools="true">
     <template v-slot:aside-left>
       <div class="content-left">
         <Box class="flow-statistics" :delayTime="100" position="left">

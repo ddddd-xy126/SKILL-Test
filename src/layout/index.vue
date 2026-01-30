@@ -16,7 +16,7 @@
       <slot name="aside-left"></slot>
     </aside>
 
-    <aside class="layout-aside-left-tools">
+    <aside class="layout-aside-left-tools" v-if="leftTools">
       <!-- 侧边栏内容 -->
       <slot name="aside-left-tools"></slot>
     </aside>
@@ -76,6 +76,10 @@ export default {
       default: false,
     },
     scene: {
+      type: Boolean,
+      default: false,
+    },
+    leftTools: {
       type: Boolean,
       default: false,
     },

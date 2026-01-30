@@ -14,6 +14,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 3.  **极简删除原则 (Delete-by-Default)**：用户未明确提及的任何布局元素（如各种 Tools 工具栏），**必须** 在所有相关页面中通过 Props 禁用并清理对应插槽。
 4.  **显式 Props 硬约束**：严禁依赖默认值。在所有页面的 `<Layout>` 组件上，**必须** 显式设置所有核心 Props（`:header`, `:footer`, `:aside`, `:main`, `:scene`, `:headerTool`, `:footerTool`, `:leftTools`, `:rightTools`）。
 5.  **核心结构守护**：除非用户明确要求删除，否则 `header`, `aside-left`, `aside-right`, `scene`, `main` 被视为**必须存在**的基础结构。
+6.  **依赖与编译安全 (Dependency & Build Safety)**：**严禁** 引入项目中未安装的第三方依赖（如 `dayjs`, `lodash` 等）。在实施修改后，**必须** 验证代码是否存在编译错误。
 
 ---
 
@@ -24,6 +25,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 ### 1. 多模态输入解析
 
 - **UI 设计图识别**：
+
   - **自动识别区域**：Header (顶部)、Footer (底部)、Left/Right Sidebar (左右侧边栏)、Tools (工具栏)。
   - **比例计算**：分析侧边栏内卡片（Box）的高度占比（如 30:70 或 33:33:33）。
   - **组件识别**：识别导航栏、天气、搜索框、工具栏按钮等元素位置。
@@ -63,6 +65,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 ### Step 1：全量定位与深度解析 (Targeting & Deep Analysis)
 
 1.  **多维度输入解析**：
+
     - **UI 图深度解析 (UI Analysis)**：
       - **布局识别**：精准识别设计稿中的 Header, Footer, Sidebar, Tools 位置。
       - **比例分析**：计算侧边栏内卡片 (Box) 的高度占比，识别组件间隙。
@@ -73,6 +76,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
     - **双向核对 (Cross-Check)**：将 UI 图识别结果与用户描述比对，若有冲突，以用户描述为准，但需在解析报告中指出。
 
 2.  **全量现状扫描**：
+
     - 定位 `src/views/index.vue` (全局控制层) 和所有子视图 `src/views/page_X/page_X_1/index.vue` (局部控制层)。
     - 列出当前所有页面的 `<Layout>` Props 和 Slots 现状。
 
@@ -85,6 +89,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 ### Step 2：Props 责任分配与标准化 (Responsibility & Props Standard)
 
 1.  **分层控制原则 (Tiered Control)**：
+
     - **全局层 (`src/views/index.vue`)**：
       - 负责控制 `header`, `footer`, `scene`, `main` 的全局显隐。
       - **必须显式设置**：`:header="true"`, `:footer="true"` (或根据需求设置)。
