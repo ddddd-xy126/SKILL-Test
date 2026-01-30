@@ -5,49 +5,27 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 # 布局生成器技能 (Layout Generator Skill)
 
-## ⚠️ 强制执行协议 (Mandatory Enforcement Protocol)
-
-**此文档中的所有规则、步骤和自检清单均为“硬约束”，Agent 在执行任务时必须无条件遵守：**
-
-1.  **原子化执行**：Agent 必须按照“Step 1 -> Step 2 -> Step 3 -> Step 4 -> Step 5”的顺序执行，严禁跳步。
-2.  **全量扫描义务**：任何涉及布局调整的任务，Agent **必须** 递归检查项目中所有视图文件（`src/views/**/*.vue`），确保所有页面的 `<Layout>` 配置保持同步。
-3.  **极简删除原则 (Delete-by-Default)**：用户未明确提及的任何布局元素（如各种 Tools 工具栏），**必须** 在所有相关页面中通过 Props 禁用并清理对应插槽。
-4.  **显式 Props 硬约束**：严禁依赖默认值。在所有页面的 `<Layout>` 组件上，**必须** 显式设置所有核心 Props（`:header`, `:footer`, `:aside`, `:main`, `:scene`, `:headerTool`, `:footerTool`, `:leftTools`, `:rightTools`）。
-5.  **核心结构守护**：除非用户明确要求删除，否则 `header`, `aside-left`, `aside-right`, `scene`, `main` 被视为**必须存在**的基础结构。
-6.  **依赖与编译安全 (Dependency & Build Safety)**：**严禁** 引入项目中未安装的第三方依赖（如 `dayjs`, `lodash` 等）。在实施修改后，**必须** 验证代码是否存在编译错误。
-
----
-
-本技能用于根据 **UI 设计图** 或 **自然语言描述**，智能修改二开项目的布局结构。适用于 B&S 二开项目，核心在于调整 UI 覆盖层（Header, Footer, Sidebars），**严禁破坏底层 3D Scene 逻辑**。
-
-## 核心能力
+## 核心能力 (Core Capabilities)
 
 ### 1. 多模态输入解析
 
 - **UI 设计图识别**：
-
   - **自动识别区域**：Header (顶部)、Footer (底部)、Left/Right Sidebar (左右侧边栏)、Tools (工具栏)。
-  - **比例计算**：分析侧边栏内卡片（Box）的高度占比（如 30:70 或 33:33:33）。
-  - **组件识别**：识别导航栏、天气、搜索框、工具栏按钮等元素位置。
-  - **微观细节提取 (Micro-Detail Extraction)**：**必须** 检查 Header 和 Footer 中的文本格式（如日期格式 "YYYY/MM/DD HH:mm:ss"）、小图标（如天气 Icon）、用户信息等。**严禁** 忽略顶部状态栏的微小元素。
-  - **视觉一致性 (Visual Consistency)**：Header 标题 Logo 默认字体大小应设置为 `var(--font-size-64)` 以保证视觉冲击力，除非用户另有要求。
-
+  - **比例计算**：分析侧边栏内卡片（Box）的高度占比。
+  - **组件识别**：识别导航栏、天气、搜索框等布局元素。
 - **自然语言理解**：
   - 意图识别：移动（Move）、新增（Add）、删除（Remove）、调整比例（Resize）。
-  - 示例：“把底部的导航移到顶部”、“左侧分三个卡片，中间的要大一点”。
 
-### 2. 智能导航管理（Single Source of Truth）
+### 2. 智能导航管理
 
 - **原则**：页面中应当只有一个主路由导航组件生效。
-- **自动互斥**：当用户要求“迁移导航位置”（如从底部移至顶部）时：
-  1. **新增**：在目标位置（如 Header）添加导航组件（如 `<nav-item-header>`）。
-  2. **清理**：**必须**查找旧位置（如 Footer）的导航代码，并将其**注释掉**（保留代码以备回滚，但使其失效）。
+- **自动互斥**：当迁移导航位置时，**必须**在新位置新增并注释掉旧位置代码。
 
 ## 项目布局架构 (Layout Architecture)
 
 项目基于 `src/layout/index.vue` 提供核心结构，采用 **绝对定位 (Absolute Positioning)** 布局。
 
-### 1. 区域与插槽映射表
+### 区域与插槽映射表
 
 | 区域         | 插槽名              | 对应组件示例                       | 关键定位信息 (CSS)                                           |
 | :----------- | :------------------ | :--------------------------------- | :----------------------------------------------------------- |
@@ -63,104 +41,86 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 ## 执行流程 (Execution Procedure)
 
-### Step 1：全量定位与深度解析 (Targeting & Deep Analysis)
+### Step 1：定位与边界识别 (Targeting & Boundary Identification)
 
-1.  **多维度输入解析**：
+1.  **解析输入**：
+    - 识别 UI 图/文本中的 Header, Footer, Sidebar 结构。
+    - **关键：** 明确区分“业务组件”（需保留/迁移）与“布局容器”（需调整）。
+2.  **现状扫描**：
+    - 定位 `src/views/index.vue` (全局) 和所有子视图 `src/views/page_X/page_X_1/index.vue`。
+    - 记录当前 `<Layout>` 的 Props 状态。
 
-    - **UI 图深度解析 (UI Analysis)**：
-      - **布局识别**：精准识别设计稿中的 Header, Footer, Sidebar, Tools 位置。
-      - **比例分析**：计算侧边栏内卡片 (Box) 的高度占比，识别组件间隙。
-      - **微观元素提取**：**必须** 放大检查 Header 左右两侧的细节（日期时间格式、天气图标、Logo 文本内容），记录下具体的格式（如 `YYYY/MM/DD` vs `YYYY-MM-DD`）。
-    - **自然语言解析 (Prompt Analysis)**：
-      - **显式需求提取**：识别用户明确要求开启或移动的组件。
-      - **隐式清理规则**：基于“极简删除原则”，识别用户未提及的所有布局元素。
-    - **双向核对 (Cross-Check)**：将 UI 图识别结果与用户描述比对，若有冲突，以用户描述为准，但需在解析报告中指出。
+### Step 2：标准化配置 (Standardization)
 
-2.  **全量现状扫描**：
+1.  **制定 Props 策略**：
+    - 根据需求决定 9 大 Props 的 `true/false`。
+    - **分层原则**：`src/views/index.vue` 控制全局结构，子页面控制局部工具。
+2.  **清理清单**：
+    - 列出需要移除的插槽内容（基于极简原则）。
 
-    - 定位 `src/views/index.vue` (全局控制层) 和所有子视图 `src/views/page_X/page_X_1/index.vue` (局部控制层)。
-    - 列出当前所有页面的 `<Layout>` Props 和 Slots 现状。
+### Step 3：原子化实施 (Implementation)
 
-3.  **制定变更清单**：
-    - **全局变更 (Global)**：Header/Footer 的内容、显隐及全局导航逻辑。
-    - **局部变更 (Local)**：侧边栏卡片内容、Tools 显隐、布局比例。
-    - **组件化重构 (Componentization)**：对于复杂的侧边栏内容，**必须** 规划创建独立的 Vue 子组件（如 `ClimateProfile.vue`, `WeatherChart.vue`），严禁在 `index.vue` 中堆砌大量 HTML 代码。
-    - **清理清单 (Cleanup)**：UI 图和描述中均未提及的插槽。
+1.  **容器调整**：
+    - 使用 CSS 类名控制高度百分比，**严禁**直接在 `Box` 组件上使用 `:height` 属性。
+    - 调整 `Box` 容器结构以适配 UI 比例。
+2.  **业务组件迁移**：
+    - 将业务组件（如 `<ParkTarget>`）完整移动到新的 `Box` 容器中。
+    - **注意**：只移动标签位置，**不触碰**其内部属性或逻辑。
+3.  **应用 Props**：
+    - 批量更新所有视图文件的 `<Layout>` 标签，确保 9 个 Props 全部显式设置。
+    - ```vue
+      <Layout
+        :header="true" :footer="false" :aside="true" :main="true" :scene="true"
+        :headerTool="false" :footerTool="false" :leftTools="false" :rightTools="true"
+      >
+      ```
 
-### Step 2：Props 责任分配与标准化 (Responsibility & Props Standard)
+### Step 4：自检与核对 (Verification)
 
-1.  **分层控制原则 (Tiered Control)**：
+**每次修改后，必须按照以下清单逐项自检，并在回复中确认：**
 
-    - **全局层 (`src/views/index.vue`)**：
-      - 负责控制 `header`, `footer`, `scene`, `main` 的全局显隐。
-      - **必须显式设置**：`:header="true"`, `:footer="true"` (或根据需求设置)。
-    - **局部层 (`src/views/page_X/.../index.vue`)**：
-      - 负责控制 `aside`, `headerTool`, `footerTool`, `leftTools`, `rightTools` 等页面特有元素。
+- [ ] **业务隔离 (Business Isolation)**：
+  - 确认没有修改任何 `<ParkTarget>` 等业务组件的内部代码？
+  - 确认只调整了外部的 `Box` 和 `div` 容器？
+- [ ] **全量同步 (Global Sync)**：
+  - 是否检查了项目下**所有**的 `src/views/**/*.vue` 文件？
+- [ ] **显式 Props (Explicit Props)**：
+  - 所有页面的 `<Layout>` 是否都显式设置了 9 个核心 Props？
+- [ ] **极简清理 (Minimalism)**：
+  - 用户未提及的工具栏/插槽是否已全部移除？
+- [ ] **高度安全 (Height Safety)**：
+  - 侧边栏内容高度之和是否 <= 100%？
+  - 是否使用了 CSS 类名而非行内样式控制高度？
 
-2.  **点击安全保障 (Click Safety)**：
-    - **原理**：由于采用绝对定位布局，容器必须设置 `pointer-events: none` 且内容设置 `pointer-events: auto`，以防止透明容器遮挡底层交互。
-    - **检查项**：确保 `src/layout/index.vue` 中的容器样式遵循此模式。
+## ⚠️ 强制执行协议 (Mandatory Enforcement Protocol)
 
-### Step 3：实施修改 (Implementation)
+**此协议为最高优先级指令，Agent 在执行任务时必须严格遵守。**
 
-#### A. 组件化开发 (Component Development)
+### 1. 边界与核心约束 (Boundaries & Constraints)
 
-- **优先创建子组件**：针对 UI 图中的每个独立卡片，创建专门的 `.vue` 组件。
-- **样式内聚**：使用 Scoped CSS 确保样式不污染全局，利用 Flexbox/Grid 实现组件内部的精细布局（如四季天气的 4 个 Badge）。
+1.  **零业务逻辑干扰 (Zero Business Logic Interference)**：
+    - **严禁** 修改、移动或重构页面内部的具体业务组件（如 `<ParkTarget>`, `<DeviceStatus>` 等）及其逻辑。
+    - **仅关注** 布局容器（`<Layout>`, `<Box>`, `<div class="box-main-content">`）及其属性。
+    - 将所有业务组件视为**黑盒**，仅调整其外部容器的大小、位置和插槽归属。
+2.  **全量扫描义务 (Global Scan)**：任何布局调整，**必须** 递归检查 `src/views/**/*.vue`，确保所有页面的 `<Layout>` 配置保持一致。
+3.  **依赖安全 (Dependency Safety)**：**严禁** 引入未安装的第三方库。修改后**必须**确保编译无误。
 
-#### B. 布局结构调整 (Layout Props & Slots)
+### 2. 极简与显式原则 (Minimalism & Explicit Props)
 
-- **全量同步修改**：**必须** 依次修改所有扫描到的视图文件。
-- **显式 Props 设置**：
-  ```vue
-  <Layout
-    :header="true"
-    :footer="false"
-    :aside="true"
-    :main="true"
-    :scene="true"
-    :headerTool="false"
-    :footerTool="false"
-    :leftTools="false"
-    :rightTools="true"
-  >
-  ```
-- **插槽清理**：物理删除或注释掉清理清单中的所有插槽代码。
-- **高度控制原则**：Agent **必须** 通过 CSS 类名在 `<style>` 标签中设置高度百分比，严禁直接在 `Box` 组件上使用 `:height` 属性。
+4.  **极简删除 (Delete-by-Default)**：用户未明确提及的布局元素（如 Tools 工具栏），**必须** 在所有页面中显式禁用并清理插槽。
+5.  **显式 Props 硬约束 (Explicit Props)**：在 `<Layout>` 组件上，**必须** 显式设置所有 9 个核心 Props，严禁依赖默认值：
+    - `:header`, `:footer`, `:aside`, `:main`, `:scene`
+    - `:headerTool`, `:footerTool`, `:leftTools`, `:rightTools`
 
-#### C. 导航位置迁移与细节修正
+### 3. 流程原子化 (Atomic Workflow)
 
-- **细节对齐**：根据 Step 1 提取的微观细节，修改 `src/layout/header.vue` 或创建新的 Status 组件，确保日期格式、图标位置与 UI 图 **完全一致**。
-- **导航迁移**：在目标插槽插入新导航并绑定数据，注释掉旧代码。
+6.  **严格顺序执行**：必须严格按照 [Execution Procedure] 的步骤顺序执行，严禁跳步。
 
-### Step 4：样式修正 (Style Correction)
-
-- **防溢出机制**：`.layout` 和 `.layout-aside-*` 必须具备 `overflow: hidden`。
-- **高度计算准则**：所有 `Box` 高度百分比与 `margin-bottom` 之和 **绝对不能超过 100%**。
-
-### Step 5：任务核对 (Verification)
-
-每次修改完成后，**必须** 按照以下清单逐项自检，并在回复中确认：
-
-1.  **核心结构核对 (Core Structure)**：
-    - [ ] **根布局渲染**：`src/views/index.vue` 中必须保持 `:main="true"`。
-    - [ ] **侧边栏可见性**：检查侧边栏是否被外层容器遮挡或未开启 `aside` 开关。
-    - [ ] **导航可见性**：检查导航是否已启用并正确加载，且 `z-index` 足够高。
-2.  **极简原则与显式 Props 核对**：
-    - [ ] **未要求即删除**：是否已清理所有未提及的 `Tools` 区域插槽？
-    - [ ] **全量显式设置**：所有页面的 `<Layout>` 是否都显式设置了 9 个核心 Props 开关？
-    - [ ] **多文件同步**：是否检查并修改了项目中所有使用 `<Layout>` 的视图文件？
-3.  **高度与布局核对 (Height & Layout)**：
-    - [ ] **严禁溢出**：侧边栏容器和根布局是否设置了 `overflow: hidden`？
-    - [ ] **高度分配验证**：侧边栏内部所有 `Box` 的高度与间距之和是否 **≤ 100%**？
-4.  **微观细节核对 (Micro-Details)**：
-    - [ ] **Header 细节**：日期格式、时间显示、天气图标是否与 UI 图一致？
-    - [ ] **组件完整性**：是否遗漏了任何小图标或状态文字？
+---
 
 ## 关键原则 (Critical Rules)
 
-1.  **未提及即清理**：这是本 Skill 的核心，用户没说的可选功能全部干掉。
+1.  **未提及即清理**：用户没说的可选功能全部干掉。
 2.  **显式 Props 准则**：不留任何模糊地带，所有开关必须明示。
-3.  **多页面同步**：布局修改是全局性的，严禁只改一个页面。
+3.  **布局与业务分离**：Agent 这里的上帝视角仅限于“排版”，绝不插手“业务”。
 4.  **组件化优先**：拒绝面条代码，每个卡片都是独立的组件。
-5.  **见微知著**：Header/Footer 的任何文字和图标细节都不能放过。
