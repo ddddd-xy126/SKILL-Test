@@ -1,33 +1,4 @@
 <style lang="scss" scoped>
-/* 进入/离开过渡：淡入并向上微移 */
-.wdp-fade-slide2-enter-active,
-.wdp-fade-slide2-leave-active {
-  transition: opacity 520ms cubic-bezier(.2, .8, .2, 1), transform 520ms cubic-bezier(.2, .8, .2, 1);
-}
-
-.wdp-fade-slide2-enter,
-.wdp-fade-slide2-leave-to
-
-/* .wdp-fade-slide-leave-to for Vue2 */
-  {
-  opacity: 0;
-  transform: translateY(15%);
-}
-
-.wdp-fade-slide1-enter-active,
-.wdp-fade-slide1-leave-active {
-  transition: opacity 520ms cubic-bezier(.2, .8, .2, 1), transform 520ms cubic-bezier(.2, .8, .2, 1);
-}
-
-.wdp-fade-slide1-enter,
-.wdp-fade-slide1-leave-to
-
-/* .wdp-fade-slide-leave-to for Vue2 */
-  {
-  opacity: 0;
-  transform: translate(-15%, -50%);
-}
-
 // 公共样式
 .box-main-content {
   width: 100%;
