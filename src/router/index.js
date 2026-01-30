@@ -121,6 +121,31 @@ const routes = [
           },
         ]
       },
+        {
+        path: "/page_4",
+        component: () => import("@/views/page_4/index.vue"),
+        redirect: "/page_4/1",
+        meta: {
+          title: '页面模块四',
+          requiresAuth: false,
+          keepAlive: true,
+          showInMenu: true,
+          icon: 'el-icon-monitor'
+        },
+        children: [
+          {
+            path: "1",
+            name: "page_4_1",
+            component: () => import("@/views/page_4/page_4_1/index.vue"),
+            meta: {
+              title: '系统监控',
+              requiresAuth: false,
+              keepAlive: true,
+              showInMenu: true
+            }
+          },
+        ]
+      }
     ]
   },
   // wdpWindow 页面路由 - 用于播放 RTSP 视频

@@ -52,6 +52,13 @@ export default {
           path: "/page_3",
           // bgImg: require('@images/nav/icon_3.png')
         },
+        {
+          name: "设施管理",
+          id: 4,
+          isActive: false,
+          path: "/page_4",
+          // bgImg: require('@images/nav/icon_4.png')
+        },
       ],
       currentNav: {
         id: null,
