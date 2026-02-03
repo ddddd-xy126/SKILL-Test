@@ -11,6 +11,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 - **UI 设计图识别**：
   - **自动识别区域**：Header (顶部)、Footer (底部)、Left/Right Sidebar (左右侧边栏)、Tools (工具栏)。
+  - **严格识别顶部元素**：必须识别并区分 Logo (左侧)、主路由导航栏 (中间)、天气/时间组件 (右侧)。
   - **比例计算**：分析侧边栏内卡片（Box）的高度占比。
   - **组件识别**：识别导航栏、天气、搜索框等布局元素。
 - **自然语言理解**：
@@ -182,6 +183,9 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 7.  **容器高度禁令**：严禁在 `.content-left` 和 `.content-right` 容器上设置任何高度属性（包括 `height: 100%`）。
 8.  **高度分配唯一性**：业务页面的高度属性**仅允许**设置在 `.box-main-content` 容器上，严禁作用于 `<Box>` 或其父级 `div`。
 9.  **全局宽度规范**：侧边栏宽度由 `src/layout/index.vue` 统一管理，**严禁**在业务页面中使用 `::v-deep` 或行内样式覆盖全局侧边栏宽度。
+10. **Logo 样式禁令**：Header 中的 `.logo` 标题**严禁**重新设置 `font-size`（如 `font-size: var(--font-size-X)`），必须保持全局样式一致。
+11. **导航 ID 唯一性**：`navList` 中的每个导航项**必须**拥有全局唯一的 `id`。严禁重复使用 ID，以防点击时触发多个导航项的激活状态。
+12. **路由与文件联动**：新增页面模块时，**必须**同步完成“目录创建”、“index.vue 文件生成”及“`src/router/index.js` 路由注册”三项操作，严禁出现有路由无文件或有文件无路由的情况。
 
 ### 3. 流程原子化 (Atomic Workflow)
 
