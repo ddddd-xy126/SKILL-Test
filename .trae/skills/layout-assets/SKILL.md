@@ -18,7 +18,7 @@ description: B&S二开项目布局资源管理技能，支持根据固定规范�
 | `top.png`               | `src/layout/header.vue`                       | 顶部 Header 整体背景图       |
 | `box-bg.png`            | `src/layout/box.vue`                          | `.box-main` 区域背景图       |
 | `box-header.png`        | `src/layout/box.vue`                          | `.box-header` 标题区域背景图 |
-| `nav-bg.png`            | `src/components/header/navItem-header.vue`    | 整体导航背景图               |
+| `nav-bg.png`            | 整体导航背景图                                | 整体导航背景图               |
 | `navItem-bg.png`        | `src/components/header/navItem-header.vue`    | 导航按钮背景图               |
 | `navItem-bg-active.png` | `src/components/header/navItem-header.vue`    | 导航按钮选中背景图           |
 | `header-weather.png`    | `src/components/header/setting/weather.vue`   | 顶部天气模块图标             |
@@ -39,7 +39,6 @@ description: B&S二开项目布局资源管理技能，支持根据固定规范�
 在 `header.vue` 中应用 `top.png`：
 
 - **比例调整**：`src/layout/index.vue` 中的 Header 宽高比必须设置为 `960 / 47`。
-- **拉伸控制**：`top.png` 不应设置 `background-size: 100% 100%` 以防变形。
 
 ```scss
 .header {
