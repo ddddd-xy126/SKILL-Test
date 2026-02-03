@@ -51,7 +51,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 - **Props**: `:aside="true" :main="true"` (按需开启 `headerTool` 等)
 - **标准插槽结构**:
-  - `aside-left" / "aside-right": 内部必须嵌套 `div.content-left` 或 `div.content-right`。
+  - `aside-left" / "aside-right": 内部必须嵌套 `div.content-left`或`div.content-right`。
   - **Box 容器**: 业务组件必须包裹在 `Box` 组件内。
     - **delayTime**: `Box` 组件必须设置 `delayTime`
       属性，值为毫秒数，单边侧边栏从上到下延迟时间依次增加 100。
@@ -74,17 +74,17 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 ### 区域与插槽映射表
 
-| 区域         | 插槽名              | 对应组件示例                       | 关键定位信息 (CSS)                                           |
-| :----------- | :------------------ | :--------------------------------- | :----------------------------------------------------------- |
-| **顶部**     | `header`            | `src/layout/header.vue`            | **Top: 0**, Z-Index: 2, 宽高比 960/47                        |
-| **顶部工具** | `header-tool`       | `headerTool.vue`                   | **Top: 9%**, Left: 50% (居中), Width: 42%, Z-Index: 2        |
-| **底部**     | `footer`            | `src/layout/footer.vue`            | **Bottom: 0**, Width: 100%, Padding-bottom: 4.6%, Z-Index: 2 |
-| **底部工具** | `footer-tool`       | `footerTool.vue`                   | **Bottom: 8%**, Left: 50% (居中), Width: 42%, Z-Index: 2     |
-| **左侧栏**   | `aside-left`        | `Box` 组件容器                     | **Left: 0**, Top: 8.5%, Width: 25%, Height: 89%, Z-Index: 1  |
-| **右侧栏**   | `aside-right`       | `Box` 组件容器                     | **Right: 0**, Top: 8.5%, Width: 25%, Height: 89%, Z-Index: 1 |
-| **左侧工具** | `aside-left-tools`  | `src\components\sideBarLeft.vue`   | **Left: 22%**, Bottom: 8%, Z-Index: 1 (位于左侧栏外侧)       |
-| **右侧工具** | `aside-right-tools` | `src\components\splitBuilding.vue` | **Right: 22%**, Bottom: 8%, Z-Index: 1 (位于右侧栏外侧)      |
-| **场景背景** | `scene`             | `src/layout/scene.vue`             | Full Screen, Z-Index: 0                                      |
+| 区域         | 插槽名              | 对应组件示例                       | 关键定位信息 (CSS)                                                                |
+| :----------- | :------------------ | :--------------------------------- | :-------------------------------------------------------------------------------- |
+| **顶部**     | `header`            | `src/layout/header.vue`            | **Top: 0**, Z-Index: 2, 宽高比 960/47                                             |
+| **顶部工具** | `header-tool`       | `headerTool.vue`                   | **Top: 9%**, Left: 50% (居中), Width: 42%, Z-Index: 2                             |
+| **底部**     | `footer`            | `src/layout/footer.vue`            | **Bottom: 0**, Width: 100%, Padding-bottom: 4.6%, Z-Index: 2                      |
+| **底部工具** | `footer-tool`       | `footerTool.vue`                   | **Bottom: 8%**, Left: 50% (居中), Width: 42%, Z-Index: 2                          |
+| **左侧栏**   | `aside-left`        | `Box` 组件容器                     | **Left: 0**, Top: 8.5%, Width: 自定义或从 UI 图自动计算, Height: 89%, Z-Index: 1  |
+| **右侧栏**   | `aside-right`       | `Box` 组件容器                     | **Right: 0**, Top: 8.5%, Width: 自定义或从 UI 图自动计算, Height: 89%, Z-Index: 1 |
+| **左侧工具** | `aside-left-tools`  | `src\components\sideBarLeft.vue`   | **Left: 22%**, Bottom: 8%, Z-Index: 1 (位于左侧栏外侧)                            |
+| **右侧工具** | `aside-right-tools` | `src\components\splitBuilding.vue` | **Right: 22%**, Bottom: 8%, Z-Index: 1 (位于右侧栏外侧)                           |
+| **场景背景** | `scene`             | `src/layout/scene.vue`             | Full Screen, Z-Index: 0                                                           |
 
 ## 执行流程 (Execution Procedure)
 
