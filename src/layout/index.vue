@@ -41,7 +41,8 @@
       <slot name="scene"></slot>
     </main>
 
-    <img class="masktem" src="@images/mask.png" alt=""  /> 
+    <!-- 遮罩 -->
+    <img class="bgtem" src="@images/bg.png" alt="" />
 
     <!-- 底部工具 -->
     <div class="footer-tool" v-if="footerTool">
@@ -249,7 +250,6 @@ export default {
   top: 0;
   width: 100%;
   height: 93.3%;
-
 }
 
 .content-left {

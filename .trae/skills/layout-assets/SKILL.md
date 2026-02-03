@@ -13,13 +13,15 @@ description: B&S二开项目布局资源管理技能，支持根据固定规范�
 
 ### 2. 资源命名与映射
 
-| 资源名称             | 映射位置                                    | 关键用途                     |
-| :------------------- | :------------------------------------------ | :--------------------------- |
-| `top.png`            | `src/layout/header.vue`                     | 顶部 Header 整体背景图       |
-| `box-bg.png`         | `src/layout/box.vue`                        | `.box-main` 区域背景图       |
-| `box-header.png`     | `src/layout/box.vue`                        | `.box-header` 标题区域背景图 |
-| `nav-bg.png`         | `src/components/header/navItem-header.vue`  | 导航按钮背景图               |
-| `header-weather.png` | `src/components/header/setting/weather.vue` | 顶部天气模块图标             |
+| 资源名称             | 映射位置                                      | 关键用途                     |
+| :------------------- | :-------------------------------------------- | :--------------------------- |
+| `top.png`            | `src/layout/header.vue`                       | 顶部 Header 整体背景图       |
+| `box-bg.png`         | `src/layout/box.vue`                          | `.box-main` 区域背景图       |
+| `box-header.png`     | `src/layout/box.vue`                          | `.box-header` 标题区域背景图 |
+| `nav-bg.png`         | `src/components/header/navItem-header.vue`    | 导航按钮背景图               |
+| `header-weather.png` | `src/components/header/setting/weather.vue`   | 顶部天气模块图标             |
+| `header-setting.png` | `src/components/header/setting/selection.vue` | 顶部设置模块图标             |
+| `mask.png`           | `src/layout/index.vue`                        | 遮罩图                       |
 
 ### 3. 条件应用机制 (Conditional Application)
 
