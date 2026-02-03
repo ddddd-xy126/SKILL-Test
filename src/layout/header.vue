@@ -153,11 +153,7 @@ export default {
     align-items: center;
     width: 100%;
     height: 100%;
-    padding: 0% 2% 2% 1%;
-
-    background-image: url(~@images/top_bg.png);
-    background-size: 100% 100%;
-
+    padding: 0% 2% 2% 1%; 
     .logo {
         width: 18%;
         font-family: var(--font-family-primary-Medium);
