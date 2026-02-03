@@ -41,8 +41,7 @@
       <slot name="scene"></slot>
     </main>
 
-    <img class="masktem" src="@images/mask.png" alt=""  />
-    <img class="bgtem" src="@images/bgtem.png" alt="" v-if="main" />
+    <img class="masktem" src="@images/mask.png" alt=""  /> 
 
     <!-- 底部工具 -->
     <div class="footer-tool" v-if="footerTool">

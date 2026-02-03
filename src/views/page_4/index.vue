@@ -1,25 +1,18 @@
-<template>
-    <div>
-        <router-view></router-view>
-    </div>
-</template>
+<template></template>
 
 <script>
 export default {
-    name: 'FrontEndIndex',
+  name: "FrontEndIndex",
 
-    data() {
-        return {
+  components: {},
+  data() {
+    return {};
+  },
+  computed: {},
+  mounted() {},
 
-        };
-    },
+  methods: {},
 
-    mounted() {
-
-    },
-
-    methods: {
-
-    },
+  beforeDestroy() {},
 };
 </script>

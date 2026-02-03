@@ -1,6 +1,6 @@
 /**
  * Vue Router 路由配置 - 包含路由守卫
- * 
+ *
  * 路由结构:
  * / (根路径)
  * ├── /page_1 (第一个页面模块)
@@ -11,14 +11,14 @@
  * ├── /page_2 (第二个页面模块)
  * ├── /page_3 (第三个页面模块)
  * └── /page_4 (第四个页面模块)
- * 
+ *
  * @author Hua<51world>
  */
 
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { Message } from 'element-ui';
-import store from '@/store'; // 引入 Vuex store
+import { Message } from "element-ui";
+import store from "@/store"; // 引入 Vuex store
 
 // 注册 Vue Router 插件
 Vue.use(VueRouter);
@@ -40,10 +40,10 @@ const routes = [
     component: () => import("@/views/index.vue"),
     redirect: "/page_1",
     meta: {
-      title: '数据可视化大屏',
+      title: "数据可视化大屏",
       requiresAuth: false, // 是否需要认证
-      keepAlive: true,     // 是否缓存组件
-      showInMenu: false    // 是否在菜单中显示
+      keepAlive: true, // 是否缓存组件
+      showInMenu: false, // 是否在菜单中显示
     },
     children: [
       {
@@ -51,11 +51,11 @@ const routes = [
         component: () => import("@/views/page_1/index.vue"),
         redirect: "/page_1/1",
         meta: {
-          title: '页面模块一',
+          title: "页面模块一",
           requiresAuth: false,
           keepAlive: true,
           showInMenu: true,
-          icon: 'el-icon-data-line'
+          icon: "el-icon-data-line",
         },
         children: [
           {
@@ -63,24 +63,24 @@ const routes = [
             name: "page_1_1",
             component: () => import("@/views/page_1/page_1_1/index.vue"),
             meta: {
-              title: '数据概览',
+              title: "数据概览",
               requiresAuth: false,
               keepAlive: true,
-              showInMenu: true
-            }
-          }
-        ]
+              showInMenu: true,
+            },
+          },
+        ],
       },
       {
         path: "/page_2",
         component: () => import("@/views/page_2/index.vue"),
         redirect: "/page_2/1",
         meta: {
-          title: '页面模块二',
+          title: "页面模块二",
           requiresAuth: false,
           keepAlive: true,
           showInMenu: true,
-          icon: 'el-icon-pie-chart'
+          icon: "el-icon-pie-chart",
         },
         children: [
           {
@@ -88,24 +88,24 @@ const routes = [
             name: "page_2_1",
             component: () => import("@/views/page_2/page_2_1/index.vue"),
             meta: {
-              title: '业务分析',
+              title: "业务分析",
               requiresAuth: false,
               keepAlive: true,
-              showInMenu: true
-            }
-          }
-        ]
+              showInMenu: true,
+            },
+          },
+        ],
       },
       {
         path: "/page_3",
         component: () => import("@/views/page_3/index.vue"),
         redirect: "/page_3/1",
         meta: {
-          title: '页面模块三',
+          title: "页面模块三",
           requiresAuth: false,
           keepAlive: true,
           showInMenu: true,
-          icon: 'el-icon-monitor'
+          icon: "el-icon-monitor",
         },
         children: [
           {
@@ -113,24 +113,24 @@ const routes = [
             name: "page_3_1",
             component: () => import("@/views/page_3/page_3_1/index.vue"),
             meta: {
-              title: '系统监控',
+              title: "系统监控",
               requiresAuth: false,
               keepAlive: true,
-              showInMenu: true
-            }
+              showInMenu: true,
+            },
           },
-        ]
+        ],
       },
-        {
+      {
         path: "/page_4",
         component: () => import("@/views/page_4/index.vue"),
         redirect: "/page_4/1",
         meta: {
-          title: '页面模块四',
+          title: "页面模块四",
           requiresAuth: false,
           keepAlive: true,
           showInMenu: true,
-          icon: 'el-icon-monitor'
+          icon: "el-icon-monitor",
         },
         children: [
           {
@@ -138,55 +138,55 @@ const routes = [
             name: "page_4_1",
             component: () => import("@/views/page_4/page_4_1/index.vue"),
             meta: {
-              title: '系统监控',
+              title: "系统监控",
               requiresAuth: false,
               keepAlive: true,
-              showInMenu: true
-            }
+              showInMenu: true,
+            },
           },
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
   // wdpWindow 页面路由 - 用于播放 RTSP 视频
   {
-    path: '/wdpWindow',
-    name: 'wdpWindow',
-    component: () => import('@/views/wdpWindow/index.vue'),
+    path: "/wdpWindow",
+    name: "wdpWindow",
+    component: () => import("@/views/wdpWindow/index.vue"),
     meta: {
-      title: 'RTSP视频播放',
+      title: "RTSP视频播放",
       requiresAuth: false,
       keepAlive: false,
-      showInMenu: false
-    }
+      showInMenu: false,
+    },
   },
   // 404 错误页面
   {
-    path: '/404',
-    name: '404',
-    component: () => import('@/views/error/404.vue'),
+    path: "/404",
+    name: "404",
+    component: () => import("@/views/error/404.vue"),
     meta: {
-      title: '页面不存在',
+      title: "页面不存在",
       requiresAuth: false,
-      showInMenu: false
-    }
+      showInMenu: false,
+    },
   },
   // 403 权限不足页面
   {
-    path: '/403',
-    name: '403',
-    component: () => import('@/views/error/403.vue'),
+    path: "/403",
+    name: "403",
+    component: () => import("@/views/error/403.vue"),
     meta: {
-      title: '权限不足',
+      title: "权限不足",
       requiresAuth: false,
-      showInMenu: false
-    }
+      showInMenu: false,
+    },
   },
   // 通配符路由，重定向到404页面
   {
-    path: '*',
-    redirect: '/404'
-  }
+    path: "*",
+    redirect: "/404",
+  },
 ];
 
 // 创建路由实例
@@ -205,7 +205,7 @@ function hasPermission(requiredRoles, userRoles) {
   if (!requiredRoles || requiredRoles.length === 0) {
     return true;
   }
-  return requiredRoles.some(role => userRoles.includes(role));
+  return requiredRoles.some((role) => userRoles.includes(role));
 }
 
 /**
@@ -214,7 +214,8 @@ function hasPermission(requiredRoles, userRoles) {
  */
 function isAuthenticated() {
   // 这里可以检查 token、session 等
-  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
   return !!token;
 }
 
@@ -224,8 +225,10 @@ function isAuthenticated() {
  */
 function getUserRoles() {
   // 从 store 或 localStorage 获取用户角色
-  const userInfo = store.getters.userInfo || JSON.parse(localStorage.getItem('userInfo') || '{}');
-  return userInfo.roles || ['guest'];
+  const userInfo =
+    store.getters.userInfo ||
+    JSON.parse(localStorage.getItem("userInfo") || "{}");
+  return userInfo.roles || ["guest"];
 }
 
 /**
@@ -233,7 +236,7 @@ function getUserRoles() {
  * 在路由跳转前进行权限验证、登录检查等
  */
 router.beforeEach((to, from, next) => {
-  console.log('路由跳转:', from.path, '->', to.path);
+  console.log("路由跳转:", from.path, "->", to.path);
 
   // 设置页面标题
   if (to.meta && to.meta.title) {
@@ -242,13 +245,13 @@ router.beforeEach((to, from, next) => {
 
   // 显示加载状态
   if (store.state.loading !== undefined) {
-    store.commit('setLoading', true);
+    store.commit("setLoading", true);
   }
 
   // 检查是否需要认证
   if (to.meta.requiresAuth) {
     if (!isAuthenticated()) {
-      Message.warning('请先登录');
+      Message.warning("请先登录");
       // 可以跳转到登录页面
       // next('/login');
       // 或者显示登录弹窗
@@ -260,8 +263,8 @@ router.beforeEach((to, from, next) => {
     if (to.meta.roles && to.meta.roles.length > 0) {
       const userRoles = getUserRoles();
       if (!hasPermission(to.meta.roles, userRoles)) {
-        Message.error('权限不足，无法访问该页面');
-        next('/403'); // 跳转到权限不足页面
+        Message.error("权限不足，无法访问该页面");
+        next("/403"); // 跳转到权限不足页面
         return;
       }
     }
@@ -281,20 +284,20 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   // 隐藏加载状态
   if (store.state.loading !== undefined) {
-    store.commit('setLoading', false);
+    store.commit("setLoading", false);
   }
 
   // 记录页面访问统计
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('config', 'GA_MEASUREMENT_ID', {
-      page_path: to.path
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("config", "GA_MEASUREMENT_ID", {
+      page_path: to.path,
     });
   }
 
   // 滚动到页面顶部
   window.scrollTo(0, 0);
 
-  console.log('路由跳转完成:', to.path);
+  console.log("路由跳转完成:", to.path);
 });
 
 /**
@@ -302,12 +305,12 @@ router.afterEach((to, from) => {
  * 捕获路由过程中的错误
  */
 router.onError((error) => {
-  console.error('路由错误:', error);
-  Message.error('页面加载失败，请刷新重试');
+  console.error("路由错误:", error);
+  Message.error("页面加载失败，请刷新重试");
 
   // 隐藏加载状态
   if (store.state.loading !== undefined) {
-    store.commit('setLoading', false);
+    store.commit("setLoading", false);
   }
 });
 
@@ -322,10 +325,10 @@ router.onError((error) => {
  * @param {Function} onAbort 失败回调
  */
 router.safePush = function (location, onComplete, onAbort) {
-  return this.push(location, onComplete, onAbort).catch(err => {
-    if (err.name !== 'NavigationDuplicated') {
-      console.error('路由跳转失败:', err);
-      Message.error('页面跳转失败');
+  return this.push(location, onComplete, onAbort).catch((err) => {
+    if (err.name !== "NavigationDuplicated") {
+      console.error("路由跳转失败:", err);
+      Message.error("页面跳转失败");
     }
   });
 };
@@ -345,10 +348,12 @@ router.isCurrentRoute = function (path) {
  */
 router.getBreadcrumb = function () {
   const matched = this.currentRoute.matched;
-  return matched.filter(item => item.meta && item.meta.title).map(item => ({
-    title: item.meta.title,
-    path: item.path
-  }));
+  return matched
+    .filter((item) => item.meta && item.meta.title)
+    .map((item) => ({
+      title: item.meta.title,
+      path: item.path,
+    }));
 };
 
 export default router;
