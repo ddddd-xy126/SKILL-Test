@@ -42,7 +42,7 @@
     </main>
 
     <!-- 遮罩 -->
-    <img class="bgtem" src="@images/bg.png" alt="" />
+    <img class="bgtem" src="@images/mask.png" alt="" />
 
     <!-- 底部工具 -->
     <div class="footer-tool" v-if="footerTool">
