@@ -102,6 +102,10 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 1.  **自动化布局生成 (Automated Layout Generation)**：
     - **零手动复制**：新增页面时，Agent 必须根据用户需求自动生成符合 `src/views/page_X/page_X_1/index.vue` 规范的完整布局文件结构，严禁要求用户手动复制粘贴。
     - **结构标准化**：生成的页面必须包含 `Layout` 根容器、`aside-left/right` 插槽、以及内部的 `Box` 组件序列。
+    - **目录强制规范**：新增业务页面模块时（如 `page_X/page_X_1`），必须同时创建以下目录和文件：
+      - `components/` 目录：用于存放该页面的局部业务组件。
+      - `mixins/wdpapi.js` 文件：用于存放该页面的 3D 场景交互逻辑。
+      - `index.vue` 文件：必须引入 `mixins/wdpapi.js` 并使用 `Layout` 和 `Box` 组件。
     - **路由自动注册**：在生成文件后，必须同步在 `src/router/index.js` 中添加对应的路由配置。
     - **代码清理**：生成的 `index.vue` 必须保持极简，仅保留布局所需的 `components` 引用和基础 `data`，严禁携带其他页面的业务逻辑。
 2.  **制定 Props 策略**：
