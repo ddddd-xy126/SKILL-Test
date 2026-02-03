@@ -13,21 +13,23 @@ description: B&S二开项目布局资源管理技能，支持根据固定规范�
 
 ### 2. 资源命名与映射
 
-| 资源名称             | 映射位置                                      | 关键用途                     |
-| :------------------- | :-------------------------------------------- | :--------------------------- |
-| `top.png`            | `src/layout/header.vue`                       | 顶部 Header 整体背景图       |
-| `box-bg.png`         | `src/layout/box.vue`                          | `.box-main` 区域背景图       |
-| `box-header.png`     | `src/layout/box.vue`                          | `.box-header` 标题区域背景图 |
-| `nav-bg.png`         | `src/components/header/navItem-header.vue`    | 导航按钮背景图               |
-| `header-weather.png` | `src/components/header/setting/weather.vue`   | 顶部天气模块图标             |
-| `header-setting.png` | `src/components/header/setting/selection.vue` | 顶部设置模块图标             |
-| `mask.png`           | `src/layout/index.vue`                        | 遮罩图                       |
+| 资源名称                | 映射位置                                      | 关键用途                     |
+| :---------------------- | :-------------------------------------------- | :--------------------------- |
+| `top.png`               | `src/layout/header.vue`                       | 顶部 Header 整体背景图       |
+| `box-bg.png`            | `src/layout/box.vue`                          | `.box-main` 区域背景图       |
+| `box-header.png`        | `src/layout/box.vue`                          | `.box-header` 标题区域背景图 |
+| `nav-bg.png`            | `src/components/header/navItem-header.vue`    | 整体导航背景图               |
+| `navItem-bg.png`        | `src/components/header/navItem-header.vue`    | 导航按钮背景图               |
+| `navItem-bg-active.png` | `src/components/header/navItem-header.vue`    | 导航按钮选中背景图           |
+| `header-weather.png`    | `src/components/header/setting/weather.vue`   | 顶部天气模块图标             |
+| `header-date.png`       | 顶部日期前方的 icon                           | 顶部日期模块图标             |
+| `header-time.png`       | 顶部时间前方的 icon                           | 顶部时间模块图标             |
+| `header-setting.png`    | `src/components/header/setting/selection.vue` | 顶部设置模块图标             |
+| `mask.png`              | `src/layout/index.vue`                        | 遮罩图                       |
 
 ### 3. 条件应用机制 (Conditional Application)
 
 - **存在即应用**：在生成或调整布局代码时，必须首先确认 `src/assets/images/layout` 目录下是否存在对应资源。
-- **不存在即移除**：若目录下无对应命名的资源，**严禁**在代码中出现任何形式的引用（包括 CSS `url()`、HTML `<img>` 或 JS `require/import`）。
-- **静态分析优先**：**严禁**使用 `try...catch` 等运行时逻辑来规避资源缺失问题。Webpack/Vite 会在编译阶段进行静态分析，任何不存在的资源引用都会导致构建失败。
 - **强制校验流程**：在编写任何资源引用代码前，必须先通过 `LS` 工具确认资源文件确实存在。
 
 ## 执行指南 (Execution Guidelines)
