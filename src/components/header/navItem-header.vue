@@ -56,16 +56,10 @@
 </style>
 
 <template>
-  <div class="nav-item-container" @click="navClickEvent(item)">
-    <!-- <div :class="`left${item.isActive ? ' active' : ''}`">
-            <img :src="item.icon" alt="">
-        </div> -->
-
+  <div class="nav-item-container" @click="navClickEvent(item)"> 
     <div :class="`right${item.isActive ? ' active' : ''}`">
       <span>{{ item.name }}</span>
     </div>
-
-    <img class="bgImg" :src="getImgURL(item.id, item.isActive)" alt="" />
   </div>
 </template>
 

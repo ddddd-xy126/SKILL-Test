@@ -10,19 +10,13 @@
 
     .item {
         width: 100%;
-        height: 100%;
-        background-image: url(~@images/nav/footer_nor.png);
-        background-size: 100% 100%;
+        height: 100%; 
         display: flex;
         justify-content: center;
         align-items: center;
 
         h3 {
             margin-bottom: 28%;
-        }
-
-        &.active {
-            background-image: url(~@images/nav/footer_pre.png);
         }
     }
 
