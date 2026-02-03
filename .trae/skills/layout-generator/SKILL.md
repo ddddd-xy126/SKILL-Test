@@ -88,6 +88,12 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 ## 执行流程 (Execution Procedure)
 
+### Step 0: 资源准备 (Resource Preparation)
+
+1.  **调用资源技能**：
+    - 在开始任何布局调整前，**必须**先调用 `layout-assets` 技能。
+    - 确保所有布局所需的背景图、图标等资源已按照 `layout-assets` 规范就位。
+
 ### Step 1：定位与边界识别 (Targeting & Boundary Identification)
 
 1.  **解析输入**：
@@ -140,6 +146,11 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 **每次修改后，必须按照以下清单逐项自检，并在回复中确认：**
 
+- [ ] **全局外壳检查 (Global Shell Check)**：
+  - 确认 `src/views/index.vue` 中 `<Layout>` 组件的 Props 是否正确开启？
+  - **必须包含**: `:header="true" :footer="true" :main="true" :scene="true"`
+  - 确认是否已引入并注册 `Header` 和 `Footer` 组件？
+  - 确认 `template` 中是否已包含 `<template v-slot:header><Header /></template>` 和 `<template v-slot:footer><Footer /></template>`？
 - [ ] **高度安全 (Height Safety)**：
   - 侧边栏内容高度之和 + 默认间距是否 <= 100%？
   - 是否使用了 CSS 类名而非行内样式控制高度？
