@@ -26,7 +26,9 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 项目基于 `src/layout/index.vue` 提供核心结构，采用 **绝对定位 (Absolute Positioning)** 布局。布局分为 **全局外壳 (Global Shell)** 和 **业务页面 (Business Page)** 两层。
 
 ### 1. 全局外壳 (src/views/index.vue)
+
 负责应用的基础框架，包括顶部、底部、场景背景和路由入口。
+
 - **Props**: `:header="true" :footer="true" :main="true" :scene="true"`
 - **导航模式**：推荐采用“独步中间”模式，即在 `Header` 组件中央展示主路由导航。
 - **关键结构**:
@@ -34,7 +36,8 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
   <template>
     <Layout :header="true" :footer="true" :main="true" :scene="true">
       <template v-slot:header><Header /></template>
-      <router-view /> <!-- 业务页面注入点 -->
+      <router-view />
+      <!-- 业务页面注入点 -->
       <template v-slot:scene><Scene /></template>
       <template v-slot:footer><Footer /></template>
     </Layout>
@@ -42,18 +45,22 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
   ```
 
 ### 2. 业务页面 (src/views/page_X/page_X_1/index.vue)
+
 负责具体的侧边栏卡片和局部工具栏。
+
 - **Props**: `:aside="true" :main="true"` (按需开启 `headerTool` 等)
 - **标准插槽结构**:
   - `aside-left` / `aside-right`: 内部必须嵌套 `div.content-left` 或 `div.content-right`。
   - **Box 容器**: 业务组件必须包裹在 `Box` 组件内。
+    - **delayTime**: `Box` 组件必须设置 `delayTime`
+      属性，值为毫秒数，单边侧边栏从上到下延迟时间依次增加 100。
 - **关键结构**:
   ```vue
   <template>
     <Layout :aside="true" :main="true">
       <template v-slot:aside-left>
         <div class="content-left">
-          <Box class="custom-class" position="left">
+          <Box class="custom-class" position="left" :delayTime="200">
             <template v-slot:header><h1>标题</h1></template>
             <div class="box-main-content"><!-- 占位或业务组件 --></div>
           </Box>
@@ -90,15 +97,11 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 ### Step 2：标准化配置与页面初始化 (Standardization & Initialization)
 
-1.  **页面初始化 (文件夹复制规范)**：
-    *   新增页面时，**必须**直接复制 `src/views/page_1` 文件夹。
-    *   **清空内容**：
-        *   `page_X_1/components/` 文件夹下的所有业务组件。
-        *   `page_X_1/mixins/wdpapi.js` 的逻辑内容（保留文件，掏空代码）。
-    *   **更名操作**：
-        *   修改子文件夹名称（如 `page_1_1` -> `page_5_1`）。
-        *   修改 `index.vue` 中的 `name` 属性以匹配新页面（如 `Page1_1` -> `Page5_1`）。
-    *   **保留结构**：必须保留 `Layout` 和 `Box` 的基础插槽结构。
+1.  **自动化布局生成 (Automated Layout Generation)**：
+    - **零手动复制**：新增页面时，Agent 必须根据用户需求自动生成符合 `src/views/page_X/page_X_1/index.vue` 规范的完整布局文件结构，严禁要求用户手动复制粘贴。
+    - **结构标准化**：生成的页面必须包含 `Layout` 根容器、`aside-left/right` 插槽、以及内部的 `Box` 组件序列。
+    - **路由自动注册**：在生成文件后，必须同步在 `src/router/index.js` 中添加对应的路由配置。
+    - **代码清理**：生成的 `index.vue` 必须保持极简，仅保留布局所需的 `components` 引用和基础 `data`，严禁携带其他页面的业务逻辑。
 2.  **制定 Props 策略**：
     - **分层管理原则**：
       - `src/views/index.vue`：仅管理全局核心 Props (`:header`, `:footer`, `:main`, `:scene`)。
@@ -192,3 +195,4 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 2.  **显式 Props 准则**：不留任何模糊地带，所有开关必须明示。
 3.  **布局与业务分离**：Agent 这里的上帝视角仅限于“排版”，绝不插手“业务”。
 4.  **组件化优先**：拒绝面条代码，每个卡片都是独立的组件。
+5.  **风格一致性**：项目中所有页面的布局风格（间距、比例、阴影、标题格式等）必须保持高度一致。
