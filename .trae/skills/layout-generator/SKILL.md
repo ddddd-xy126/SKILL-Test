@@ -55,10 +55,6 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
   - **Box 容器**: 业务组件必须包裹在 `Box` 组件内。
     - **delayTime**: `Box` 组件必须设置 `delayTime`
       属性，值为毫秒数，单边侧边栏从上到下延迟时间依次增加 100。
-    - **标题样式**:
-      - `<Box>` 组件的标题区域（box-header）**宽度必须为 100%**，与 Box 盒子容器宽度完全一致。
-      - 标题文字使用 `<h1>` 标签包裹，靠左对齐，左边距为 10%。
-      - 移除任何左右外边距（`margin: 0`）。
 - **关键结构**:
   ```vue
   <template>
@@ -114,7 +110,14 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 2.  **Header 精细分析**（如存在）：
 
     - **左侧区域**：识别 Logo、导航栏、或其他元素（如天气组件）。
-      - **日期时间区分**：date 指年月日（如 "2024-04-01"），time 指时分秒（如 "16:00"）。
+      - **日期时间区分**：
+        - `date` 指年月日（如 "2024-04-01" 或 "2024.04.01"）。
+        - `time` 指时分秒（如 "16:00:00" 或 "16:00"）。
+        - **实现关键**：
+          - `getCurrentFormattedDateRobust()` 返回数组：`[年月日, 时分秒, 星期几]`
+          - `date.vue` 使用 `formattedDate[0]` 显示年月日
+          - `time.vue` 使用 `formattedDate[1]` 显示时分秒，需通过计算属性截取前5位（HH:MM）去掉秒数
+          - **严禁**使用错误索引（如 `formattedDate[2]` 会显示星期几）
       - **宽度保护**：左侧区域需设置最小宽度（如 `min-width: 300px`）防止内容被挤压。
       - **Logo 样式约束**：Logo **严禁**设置 `font-size` 属性，字体大小由继承或 CSS 变量控制。
     - **中间区域**：识别主标题、导航栏、或留空。
@@ -131,9 +134,8 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 4.  **侧边栏精细分析**（如存在）：
 
     - **左侧栏**：
-      - 统计卡片（Box）数量（通常 2-4 个）。
+      - 统计卡片（Box）数量。
       - 记录每个卡片的标题文字和大致高度占比。
-      - 识别是否有特殊元素（如"成品率"子卡片）。
     - **右侧栏**：同左侧栏分析方法。
     - **资源对应**：确认是否有 `box-header.png` 和 `box-bg.png`。
 
@@ -155,8 +157,6 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 ### Step 2：定位与边界识别 (Targeting & Boundary Identification)
 
-### Step 2：定位与边界识别 (Targeting & Boundary Identification)
-
 1.  **解析用户输入**：
     - 结合 Step 1 的 UI 分析结果。
     - **明确区分**"业务组件"（需保留/迁移）与"布局容器"（需调整）。
@@ -167,15 +167,12 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
     - 记录当前 `<Layout>` 的 Props 状态。
 
 3.  **资源匹配确认**：
+
     - 将 Step 1 识别的元素与 Step 0 的资源清单一一对应。
     - 列出需要应用的资源文件清单。
     - 标注缺失资源（如有）。
 
-### Step 3：标准化配置与页面初始化 (Standardization & Initialization)
-
-### Step 3：标准化配置与页面初始化 (Standardization & Initialization)
-
-1.  **自动化布局生成 (Automated Layout Generation)**：
+4.  **自动化布局生成 (Automated Layout Generation)**：
 
     - **零手动复制**：根据 Step 1 的分析结果，自动生成完整布局文件结构。
     - **结构标准化**：生成的页面必须包含 `Layout` 根容器、对应插槽、以及 `Box` 组件序列。
@@ -186,54 +183,21 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
     - **路由自动注册**：同步在 `src/router/index.js` 中添加路由配置。
     - **代码清理**：保持极简，仅保留布局所需的引用和基础 data。
 
-2.  **制定 Props 策略**：
+5.  **制定 Props 策略**：
 
     - **分层管理原则**：
       - `src/views/index.vue`：仅管理 `:header`, `:footer`, `:main`, `:scene`。
       - 子页面：管理 `:headerTool`, `:footerTool`, `:leftTools`, `:rightTools`, `:aside`, `:main`。
     - **按需开启**：默认 Props 均为 `false`，只显式设置需要的。
 
-3.  **样式提取与高度分配**：
-
-    - 在 `<style scoped>` 中定义 Box 容器的高度。
-    - **高度分配规则**：高度**必须**直接分配给 Box 类名（如 `.box-factory`），而非嵌套的 `.box-main-content`。
-    - **高度适配规则**（`margin-bottom: 14%` 时）：
-      - 3 个 Box：推荐高度 `28%`。
-      - 4 个 Box：推荐高度 `20%`。
-    - **示例**：
-      ```scss
-      .box-factory {
-        height: 28%;
-      }
-      ```
-
-4.  **资源应用**（遵循 layout-assets 规范）：
+6.  **资源应用**（遵循 layout-assets 规范）：
     - 根据 Step 2 的资源匹配清单，应用对应的背景图和图标。
     - **关键点**：
       - `.box-header` 宽度 100%，左对齐，左内边距 10%。
       - 导航按钮根据 `isActive` 动态切换背景图。
       - Header 应用 `top.png` 时设置 `background-size: 100% 100%`。
 
-### Step 4：原子化实施 (Implementation)
-
-### Step 4：原子化实施 (Implementation)
-
-1.  **容器调整**：
-
-    - 使用 CSS 类名控制高度百分比。
-    - **关键约束**：`.content-left` 和 `.content-right` 容器**严禁**设置 `height` 属性。
-
-2.  **业务组件迁移**（如需要）：
-
-    - 将业务组件（如 `<ParkTarget>`）完整移动到新的 `Box` 容器中。
-    - **零干扰原则**：只移动标签位置，**不触碰**其内部属性或逻辑。
-
-3.  **应用 Props**：
-    - 按照分层原则更新视图文件。
-    - 全局外壳: `<Layout :header="true" :footer="true" :main="true" :scene="true">`
-    - 业务页面: `<Layout :aside="true" :main="true">`
-
-### Step 5：自检与核对 (Verification)
+### Step 4：自检与核对 (Verification)
 
 **每次修改后，必须按照以下清单逐项自检：**
 
@@ -247,25 +211,23 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
   - `.box-header` 宽度是否为 100%？
   - 标题文字是否用 `<h1>` 包裹且左对齐（左内边距 10%）？
   - `.box-header` 外边距是否已清零（`margin: 0`）？
-- [ ] \*\*直接设置在 Box 类名上（如 `.box-factory { height: 28%; }`）？
+- [ ] **高度分配规范**：
+  - 高度是否直接设置在 Box 类名上（如 `.box-factory { height: 28%; }`）？
   - `.content-left` 和 `.content-right` 是否**未设置** `height` 属性？
 - [ ] **Header 左侧区域**：
   - 是否设置了最小宽度（`min-width`）防止日期时间被挤压？
-  - date（年月日）和 time（时分秒）是否正确分离显示
-  - 高度是否设置在 `.box-main-content` 而非 `<Box>` 本身？
-  - `.content-left` 和 `.content-right` 是否**未设置** `height` 属性？
+  - date（年月日）和 time（时分秒）是否与UI图（或用户描述）的显示一致？
 - [ ] **业务隔离**：
   - 是否只调整了布局容器，未触碰业务组件内部代码？
 - [ ] **显式 Props**：
   - 是否遵循分层管理原则？
   - 是否仅开启了需要的 Props（利用默认 false）？
 - [ ] **交互安全**：
-
   - 导航栏是否被其他容器遮挡？
   - 背景装饰图是否设置了 `pointer-events: none`？
-
 - [ ] **编译检查**：
   - 运行 `get_errors` 确认无编译错误。
+  - 导入导出语句是否正确无误？
 
 ## ⚠️ 强制执行协议 (Mandatory Enforcement Protocol)
 
@@ -279,41 +241,35 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
     - **仅关注** 布局容器（`<Layout>`, `<Box>`, `<div class="box-main-content">`）及其属性。
     - **纯布局模式**：使用 `<div class="box-main-content"></div>` 作为占位符。
 
-2.  **Box 标题规范**（详见 layout-assets）：
-
-    - `.box-header` 宽度 100%，`margin: 0`。
-    - 标题文字用 `<h1>` 包裹，`justify-content: flex-start`，`padding-left: 10%`。
-
-3.  **Logo 样式规范**：
+2.  **Logo 样式规范**：
 
     - Logo **严禁**设置 `font-size` 属性。
     - 字体大小由继承、CSS 变量或默认样式控制。
 
-4.  **全量扫描义务**：任何布局调整，**必须**递归检查 `src/views/**/*.vue`。
+3.  **全量扫描义务**：任何布局调整，**必须**递归检查 `src/views/**/*.vue`。
 
-5.  **依赖安全**：**严禁**引入未安装的第三方库，修改后**必须**确保编译无误。
+4.  **依赖安全**：**严禁**引入未安装的第三方库，修改后**必须**确保编译无误。
 
 ### 2. 极简与分层原则 (Minimalism & Layering)
 
-5.  **极简删除**：用户未明确提及的布局元素，**必须**显式禁用或利用默认值关闭。
+6.  **极简删除**：用户未明确提及的布局元素，**必须**显式禁用或利用默认值关闭。
 
-6.  **Props 分层约束**：
+7.  **Props 分层约束**：
 
     - `index.vue` 仅负责全局框架（header, footer, main, scene）。
     - 子页面负责局部内容（aside, headerTool, footerTool, leftTools, rightTools）。
     - **严禁**在全局 `index.vue` 中开启可能遮挡导航的容器（如 `aside`）。
 
-7.  **交互优先协议**：
+8.  **交互优先协议**：
 
     - 导航组件必须位于最高交互层。
-    - 背景装饰规则**：高度**必须\*\*直接设置在 Box 类名上（如 `.box-factory { height: 28%; }`），而非嵌套的 `.box-main-content`。
+    - 背景装饰图必须设置 `pointer-events: none`。
 
-8.  **全局宽度规范**：侧边栏宽度由 `src/layout/index.vue` 统一管理，**严禁**在业务页面中覆盖。
+9.  **全局宽度规范**：侧边栏宽度由 `src/layout/index.vue` 统一管理，**严禁**在业务页面中覆盖。
 
-9.  **Header 左侧宽度保护**：必须设置最小宽度（如 `min-width: 300px`）和适当间距（`gap`），防止日期时间内容被挤压。
+10. **高度分配唯一性**：
 
-10. **高度分配唯一性**：高度**必须**直接设置在 Box 类名上（如 `.box-factory { height: 28%; }`），而非嵌套的 `.box-main-content`。
-
+    - 高度**必须**直接设置在 Box 类名上（如 `.box-factory { height: 28%; }`），而非嵌套的 `.box-main-content`。
     - `.content-left` 和 `.content-right` 容器**严禁**设置 `height` 属性。
 
 11. **资源应用规范**（详见 layout-assets）：
@@ -324,17 +280,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 12. **导航 ID 唯一性**：`navList` 中每个导航项**必须**拥有全局唯一的 `id`。
 
-13 11. **全局宽度规范**：侧边栏宽度由 `src/layout/index.vue` 统一管理，**严禁**在业务页面中覆盖。
-
-12. **资源应用规范**（详见 layout-assets）：
-
-    - 导航按钮动态切换：`:src="item.isActive ? require('@images/layout/navItem-bg-active.png') : require('@images/layout/navItem-bg.png')"`
-    - Header 应用 `top.png` 时设置 `background-size: 100% 100%`。
-    - 资源缺失时直接移除引用，不使用降级方案。
-
-13. **导航 ID 唯一性**：`navList` 中每个导航项**必须**拥有全局唯一的 `id`。
-
-14. **路由与文件联动**：新增页面模块时，**必须**同步完成目录创建、文件生成、路由注册三项操作。
+13. **路由与文件联动**：新增页面模块时，**必须**同步完成目录创建、文件生成、路由注册三项操作。
 
 ### 3. 流程原子化 (Atomic Workflow)
 

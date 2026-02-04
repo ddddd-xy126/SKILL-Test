@@ -3,12 +3,7 @@
   <div class="header">
     <!-- <h1 class="logo">{{ logoText }}</h1> -->
     <div class="nav">
-      <NavItem
-        v-for="item in navList"
-        :key="item.id"
-        :item="item"
-        @jumpNav="jumpNav"
-      ></NavItem>
+      <NavItem v-for="item in navList" :key="item.id" :item="item" @jumpNav="jumpNav"></NavItem>
     </div>
     <!-- <h1 class="tools">
             <Setting />
@@ -132,7 +127,6 @@ export default {
       // aspect-ratio: 208 / 64;
       aspect-ratio: 250 / 58;
       /* 直接指定宽高比 */
-      margin-right: -0.7%;
     }
   }
 }
