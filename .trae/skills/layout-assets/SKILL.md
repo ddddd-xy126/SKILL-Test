@@ -13,19 +13,27 @@ description: B&S二开项目布局资源管理技能，支持根据固定规范�
 
 ### 2. 资源命名与映射
 
-| 资源名称                | 映射位置                                      | 关键用途                     |
-| :---------------------- | :-------------------------------------------- | :--------------------------- |
-| `top.png`               | `src/layout/header.vue`                       | 顶部 Header 整体背景图       |
-| `box-bg.png`            | `src/layout/box.vue`                          | `.box-main` 区域背景图       |
-| `box-header.png`        | `src/layout/box.vue`                          | `.box-header` 标题区域背景图 |
-| `nav-bg.png`            | `src/layout/footer.vue`                       | 底部背景图                   |
-| `navItem-bg.png`        | `src/components/header/navItem-header.vue`    | 导航按钮背景图               |
-| `navItem-bg-active.png` | `src/components/header/navItem-header.vue`    | 导航按钮选中背景图           |
-| `header-weather.png`    | `src/components/header/setting/weather.vue`   | 顶部天气模块图标             |
-| `header-date.png`       | 顶部日期前方的 icon                           | 顶部年月日模块图标           |
-| `header-time.png`       | 顶部时间前方的 icon                           | 顶部小时分钟秒模块图标       |
-| `header-setting.png`    | `src/components/header/setting/selection.vue` | 顶部设置模块图标             |
-| `mask.png`              | `src/layout/index.vue`                        | 遮罩图                       |
+| 资源名称                   | 映射位置                                      | 关键用途                     |
+| :------------------------- | :-------------------------------------------- | :--------------------------- |
+| `top.png`                  | `src/layout/header.vue`                       | 顶部 Header 整体背景图       |
+| `box-bg.png`               | `src/layout/box.vue`                          | `.box-main` 区域背景图       |
+| `box-header.png`           | `src/layout/box.vue`                          | `.box-header` 标题区域背景图 |
+| `nav-bg.png`               | `src/layout/footer.vue`                       | 底部背景图                   |
+| `navItem-bg.png`           | `src/components/header/navItem-header.vue`    | 导航按钮背景图               |
+| `navItem-bg-active.png`    | `src/components/header/navItem-header.vue`    | 导航按钮选中背景图           |
+| `header-weather.png`       | `src/components/header/setting/weather.vue`   | 顶部天气模块图标             |
+| `header-date.png`          | 顶部日期前方的 icon                           | 顶部年月日模块图标           |
+| `header-time.png`          | 顶部时间前方的 icon                           | 顶部小时分钟秒模块图标       |
+| `header-setting.png`       | `src/components/header/setting/selection.vue` | 顶部设置模块图标             |
+| `mask.png`                 | `src/layout/index.vue`                        | 遮罩图                       |
+| `leftTool-bg.png`          | `src/components/toolBar/sideBar.vue`          | 左侧工具栏背景图             |
+| `leftTool-bg-active.png`   | `src/components/toolBar/sideBar.vue`          | 左侧工具栏激活背景图         |
+| `rightTool-bg.png`         | `src/components/toolBar/sideBar.vue`          | 右侧工具栏背景图             |
+| `rightTool-bg-active.png`  | `src/components/toolBar/sideBar.vue`          | 右侧工具栏激活背景图         |
+| `headerTool-bg.png`        | `src/components/toolBar/headerTool.vue`       | 头部工具栏背景图             |
+| `headerTool-bg-active.png` | `src/components/toolBar/headerTool.vue`       | 头部工具栏激活背景图         |
+| `footerTool-bg.png`        | `src/components/toolBar/footerTool.vue`       | 底部工具栏背景图             |
+| `footerTool-bg-active.png` | `src/components/toolBar/footerTool.vue`       | 底部工具栏激活背景图         |
 
 ### 3. 条件应用机制 (Conditional Application)
 
