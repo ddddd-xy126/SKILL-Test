@@ -1,16 +1,9 @@
 <!-- src/components/Layout.vue -->
 <template>
   <transition :name="`slide-${position}`">
-    <div
-      class="box"
-      v-if="isShow"
-      :style="{ 'margin-bottom': footerBoxStyle['margin-bottom'] || '14%' }"
-    >
+    <div class="box" v-if="isShow" :style="{ 'margin-bottom': footerBoxStyle['margin-bottom'] || '14%' }">
       <div class="header-container">
-        <header
-          class="box-header"
-          :style="{ width: footerBoxStyle['width'] || '45%' }"
-        >
+        <header class="box-header">
           <!-- 头部内容 -->
           <slot name="header"></slot>
         </header>
@@ -115,6 +108,7 @@ export default {
   padding: 4% 3%;
   position: relative;
   height: 100%;
+
   .icon1,
   .icon2,
   .icon3,
@@ -124,18 +118,22 @@ export default {
     height: 2px;
     background-color: var(--box-content-icon-color);
   }
+
   .icon1 {
     top: -2px;
     left: -2px;
   }
+
   .icon2 {
     top: -2px;
     right: -2px;
   }
+
   .icon3 {
     bottom: -2px;
     left: -2px;
   }
+
   .icon4 {
     bottom: -2px;
     right: -2px;
