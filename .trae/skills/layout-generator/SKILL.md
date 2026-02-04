@@ -10,7 +10,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 ### 1. 多模态输入解析
 
 - **UI 设计图识别**：
-  - **自动识别区域**：Header (顶部)、Footer (底部)、Left/Right Sidebar (左右侧边栏)、Tools (工具栏)。
+  - **自动识别区域**：Header (顶部)、Footer (底部)、Left/Right Sidebar (左右侧边栏)、Tools (顶部工具栏\底部工具栏\左侧工具栏\右侧工具栏)。
   - **严格识别顶部元素**：必须识别并区分 Logo 位置、主路由导航栏位置、天气组件等位置。**严禁**在 UI 未体现时显示时间/日期组件。
   - **比例计算**：分析侧边栏内卡片（Box）的高度占比。
   - **组件识别**：识别导航栏、天气、搜索框等布局元素。
@@ -76,11 +76,11 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 | 区域         | 插槽名              | 对应组件示例                         | 关键定位信息 (CSS)                                                                |
 | :----------- | :------------------ | :----------------------------------- | :-------------------------------------------------------------------------------- |
 | **顶部**     | `header`            | `src/layout/header.vue`              | **Top: 0**, Z-Index: 2, 宽高比 960/47                                             |
-| **顶部工具** | `header-tool`       | `headerTool.vue`                     | **Top: 9%**, Left: 50% (居中), Width: 42%, Z-Index: 2                             |
 | **底部**     | `footer`            | `src/layout/footer.vue`              | **Bottom: 0**, Width: 100%, Padding-bottom: 4.6%, Z-Index: 2                      |
-| **底部工具** | `footer-tool`       | `footerTool.vue`                     | **Bottom: 8%**, Left: 50% (居中), Width: 42%, Z-Index: 2                          |
 | **左侧栏**   | `aside-left`        | `Box` 组件容器                       | **Left: 0**, Top: 8.5%, Width: 自定义或从 UI 图自动计算, Height: 89%, Z-Index: 1  |
 | **右侧栏**   | `aside-right`       | `Box` 组件容器                       | **Right: 0**, Top: 8.5%, Width: 自定义或从 UI 图自动计算, Height: 89%, Z-Index: 1 |
+| **顶部工具** | `header-tool`       | `headerTool.vue`                     | **Top: 9%**, Left: 50% (居中), Width: 42%, Z-Index: 2                             |
+| **底部工具** | `footer-tool`       | `footerTool.vue`                     | **Bottom: 8%**, Left: 50% (居中), Width: 42%, Z-Index: 2                          |
 | **左侧工具** | `aside-left-tools`  | `src\components\toolBar\sideBar.vue` | **Left: 22%**, Bottom: 8%, Z-Index: 1 (位于左侧栏外侧)                            |
 | **右侧工具** | `aside-right-tools` | `src\components\toolBar\sideBar.vue` | **Right: 22%**, Bottom: 8%, Z-Index: 1 (位于右侧栏外侧)                           |
 | **场景背景** | `scene`             | `src/layout/scene.vue`               | Full Screen, Z-Index: 0                                                           |
@@ -109,6 +109,9 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 2.  **Header 精细分析**（如存在）：
 
+    - **⚠️ 强制约束**：Header 实现必须 100% 遵循 UI 分析结果，**严禁**擅自添加或保留分析中未提及的任何元素（如左侧区域、日期组件、分隔线等）。
+      - **反例**：UI 分析说"中间显示标题，右上角显示天气"，结果实现时还保留了左侧区域的日期组件 ❌
+      - **正例**：UI 分析说什么就实现什么，多一个少一个元素都不行 ✅
     - **左侧区域**：识别 Logo、导航栏、或其他元素（如天气组件）。
       - **日期时间区分**：
         - `date` 指年月日（如 "2024-04-01" 或 "2024.04.01"）。
@@ -116,7 +119,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
         - **实现关键**：
           - `getCurrentFormattedDateRobust()` 返回数组：`[年月日, 时分秒, 星期几]`
           - `date.vue` 使用 `formattedDate[0]` 显示年月日
-          - `time.vue` 使用 `formattedDate[1]` 显示时分秒，需通过计算属性截取前5位（HH:MM）去掉秒数
+          - `time.vue` 使用 `formattedDate[1]` 显示时分秒，需通过计算属性截取前 5 位（HH:MM）去掉秒数
           - **严禁**使用错误索引（如 `formattedDate[2]` 会显示星期几）
       - **宽度保护**：左侧区域需设置最小宽度（如 `min-width: 300px`）防止内容被挤压。
       - **Logo 样式约束**：Logo **严禁**设置 `font-size` 属性，字体大小由继承或 CSS 变量控制。
@@ -187,7 +190,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
     - **分层管理原则**：
       - `src/views/index.vue`：仅管理 `:header`, `:footer`, `:main`, `:scene`。
-      - 子页面：管理 `:headerTool`, `:footerTool`, `:leftTools`, `:rightTools`, `:aside`, `:main`。
+      - 子页面：仅管理 `:headerTool`, `:footerTool`, `:leftTools`, `:rightTools`, `:aside`, `:main`。
     - **按需开启**：默认 Props 均为 `false`，只显式设置需要的。
 
 6.  **资源应用**（遵循 layout-assets 规范）：
@@ -216,7 +219,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
   - `.content-left` 和 `.content-right` 是否**未设置** `height` 属性？
 - [ ] **Header 左侧区域**：
   - 是否设置了最小宽度（`min-width`）防止日期时间被挤压？
-  - date（年月日）和 time（时分秒）是否与UI图（或用户描述）的显示一致？
+  - date（年月日）和 time（时分秒）是否与 UI 图（或用户描述）的显示一致？
 - [ ] **业务隔离**：
   - 是否只调整了布局容器，未触碰业务组件内部代码？
 - [ ] **显式 Props**：
@@ -293,9 +296,23 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 15. **严格顺序执行**：必须严格按照 [Execution Procedure] 的步骤顺序执行，严禁跳步。
 
 16. **组件使用前置检查**：
+
     - 使用任何业务组件前，**必须**先用 `read_file` 检查其 `props` 定义。
     - 确保传递的 prop 名称与组件定义完全匹配。
     - 特别注意：`NavItem` 组件使用 `:item` 而非 `:navData`。
+
+17. **UI 分析结果强制执行**（🔴 最高优先级）：
+    - **绝对禁止**在实现时偏离 Step 1 生成的 UI 分析结果。
+    - 实现前必须逐项对照 UI 分析清单，确保每个区域、每个组件都与分析结果一致。
+    - **典型错误案例**：
+      - UI 分析："Header 中间显示标题，右上角显示天气"
+      - 错误实现：保留了左侧区域的天气、日期、分隔线组件
+      - **后果**：完全违背 UI 设计意图，浪费用户时间
+    - **正确做法**：
+      - 实现前先朗读 UI 分析结果
+      - 逐项删除分析中未提及的元素
+      - 实现后再次对照分析清单自检
+    - **自检问题**："我实现的每一个元素，在 UI 分析结果中都有明确提及吗？"
 
 ---
 
