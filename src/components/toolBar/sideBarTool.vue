@@ -1,15 +1,7 @@
 <template>
   <div class="content">
-    <div
-      class="side"
-      v-for="(item, key) in sideBarList"
-      :key="key"
-      :class="{ active: item.isActive }"
-      @click="selectItem(item)"
-    >
-      <div class="side-left">
-        <img :src="item.icon" alt="" />
-      </div>
+    <div class="side" v-for="(item, key) in sideBarList" :key="key" :class="{ active: item.isActive }"
+      @click="selectItem(item)">
       <div class="side-right">{{ item.name }}</div>
     </div>
   </div>
@@ -86,35 +78,23 @@ export default {
     margin-top: 10%;
 
     &:hover {
-      .side-left {
-        background-image: url("~@/assets/images/sideBarLeft/active-head.png");
-      }
       .side-right {
-        background: linear-gradient(
-          90deg,
-          rgba(70, 135, 178, 0.8) 0%,
-          rgba(70, 135, 178, 0.5) 20%,
-          rgba(70, 135, 178, 0.1) 60%
-        );
+        background: linear-gradient(90deg,
+            rgba(70, 135, 178, 0.8) 0%,
+            rgba(70, 135, 178, 0.5) 20%,
+            rgba(70, 135, 178, 0.1) 60%);
       }
     }
 
 
     // 从左滑出版本
     &.active {
-      .side-left {
-        background-image: url("~@/assets/images/sideBarLeft/active-head.png");
-        animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
       .side-right {
         animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        background: linear-gradient(
-          90deg,
-          rgba(70, 135, 178, 0.8) 0%,
-          rgba(70, 135, 178, 0.5) 20%,
-          rgba(70, 135, 178, 0.1) 60%
-        );
+        background: linear-gradient(90deg,
+            rgba(70, 135, 178, 0.8) 0%,
+            rgba(70, 135, 178, 0.5) 20%,
+            rgba(70, 135, 178, 0.1) 60%);
         filter: brightness(1.2);
       }
     }
@@ -124,24 +104,10 @@ export default {
         transform: translateX(-16px);
         opacity: 0;
       }
+
       100% {
         transform: translateX(0);
         opacity: 1;
-      }
-    }
-
-    .side-left {
-      flex: 0 0 var(--font-size-64);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-image: url("~@/assets/images/sideBarLeft/head.png");
-      background-size: 100% 100%;
-
-      img {
-        max-width: 100%;
-        height: var(--font-size-64);
-        padding: var(--font-size-16);
       }
     }
 
