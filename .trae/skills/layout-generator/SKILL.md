@@ -11,7 +11,7 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 - **UI 设计图识别**：
   - **自动识别区域**：Header (顶部)、Footer (底部)、Left/Right Sidebar (左右侧边栏)、Tools (工具栏)。
-  - **严格识别顶部元素**：必须识别并区分 Logo (左侧)、主路由导航栏 (中间)、天气组件 (右侧)。**严禁**在 UI 未体现时显示时间/日期组件。
+  - **严格识别顶部元素**：必须识别并区分 Logo 位置、主路由导航栏位置、天气组件等位置。**严禁**在 UI 未体现时显示时间/日期组件。
   - **比例计算**：分析侧边栏内卡片（Box）的高度占比。
   - **组件识别**：识别导航栏、天气、搜索框等布局元素。
 - **自然语言理解**：
@@ -116,7 +116,9 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
     - **左侧区域**：识别 Logo、导航栏、或其他元素（如天气组件）。
       - **日期时间区分**：date 指年月日（如 "2024-04-01"），time 指时分秒（如 "16:00"）。
       - **宽度保护**：左侧区域需设置最小宽度（如 `min-width: 300px`）防止内容被挤压。
+      - **Logo 样式约束**：Logo **严禁**设置 `font-size` 属性，字体大小由继承或 CSS 变量控制。
     - **中间区域**：识别主标题、导航栏、或留空。
+      - **导航组件属性匹配**：使用 `NavItem` 组件时，必须确认组件接收的 prop 名称（通常为 `:item`），**严禁**传递不匹配的 prop 名（如 `:navData`）。
     - **右侧区域**：识别用户信息、设置按钮等元素。
     - **资源对应**：根据 Step 0 的资源清单，确认是否有 `top.png`、`header-weather.png`、`header-date.png`、`header-time.png`、`header-setting.png` 等。
 
@@ -272,15 +274,24 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 ### 1. 边界与核心约束 (Boundaries & Constraints)
 
 1.  **零业务逻辑干扰 (Zero Business Logic Interference)**：
+
     - **严禁** 修改、移动或重构业务组件（如 `<ParkTarget>`, `<DeviceStatus>`）的内部代码。
     - **仅关注** 布局容器（`<Layout>`, `<Box>`, `<div class="box-main-content">`）及其属性。
     - **纯布局模式**：使用 `<div class="box-main-content"></div>` 作为占位符。
+
 2.  **Box 标题规范**（详见 layout-assets）：
+
     - `.box-header` 宽度 100%，`margin: 0`。
     - 标题文字用 `<h1>` 包裹，`justify-content: flex-start`，`padding-left: 10%`。
-3.  **全量扫描义务**：任何布局调整，**必须**递归检查 `src/views/**/*.vue`。
 
-4.  **依赖安全**：**严禁**引入未安装的第三方库，修改后**必须**确保编译无误。
+3.  **Logo 样式规范**：
+
+    - Logo **严禁**设置 `font-size` 属性。
+    - 字体大小由继承、CSS 变量或默认样式控制。
+
+4.  **全量扫描义务**：任何布局调整，**必须**递归检查 `src/views/**/*.vue`。
+
+5.  **依赖安全**：**严禁**引入未安装的第三方库，修改后**必须**确保编译无误。
 
 ### 2. 极简与分层原则 (Minimalism & Layering)
 
@@ -299,11 +310,21 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 
 8.  **全局宽度规范**：侧边栏宽度由 `src/layout/index.vue` 统一管理，**严禁**在业务页面中覆盖。
 
-9.  **Header 左侧宽度保护**：必须设置最小宽度（如 `min-width: 300px`）和适当间距（`gap`），防止日期时间内容被挤压 t` 属性。
+9.  **Header 左侧宽度保护**：必须设置最小宽度（如 `min-width: 300px`）和适当间距（`gap`），防止日期时间内容被挤压。
 
-10. **高度分配唯一性**：高度**仅允许**设置在 `.box-main-content` 上。
+10. **高度分配唯一性**：高度**必须**直接设置在 Box 类名上（如 `.box-factory { height: 28%; }`），而非嵌套的 `.box-main-content`。
 
-11. **全局宽度规范**：侧边栏宽度由 `src/layout/index.vue` 统一管理，**严禁**在业务页面中覆盖。
+    - `.content-left` 和 `.content-right` 容器**严禁**设置 `height` 属性。
+
+11. **资源应用规范**（详见 layout-assets）：
+
+    - 导航按钮动态切换：`:src="item.isActive ? require('@images/layout/navItem-bg-active.png') : require('@images/layout/navItem-bg.png')"`
+    - Header 应用 `top.png` 时设置 `background-size: 100% 100%`。
+    - 资源缺失时直接移除引用，不使用降级方案。
+
+12. **导航 ID 唯一性**：`navList` 中每个导航项**必须**拥有全局唯一的 `id`。
+
+13 11. **全局宽度规范**：侧边栏宽度由 `src/layout/index.vue` 统一管理，**严禁**在业务页面中覆盖。
 
 12. **资源应用规范**（详见 layout-assets）：
 
@@ -318,6 +339,11 @@ description: B&S二开项目 Layout Agent Skills，支持解析 UI 设计图或�
 ### 3. 流程原子化 (Atomic Workflow)
 
 14. **严格顺序执行**：必须严格按照 [Execution Procedure] 的步骤顺序执行，严禁跳步。
+
+15. **组件使用前置检查**：
+    - 使用任何业务组件前，**必须**先用 `read_file` 检查其 `props` 定义。
+    - 确保传递的 prop 名称与组件定义完全匹配。
+    - 特别注意：`NavItem` 组件使用 `:item` 而非 `:navData`。
 
 ---
 
